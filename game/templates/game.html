@@ -3,6 +3,8 @@
 <head>
     <title>Hiragana Fight - Stage {{ level }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Press Start 2P', cursive; background: #b0b0b0; overflow: hidden; }
@@ -23,7 +25,7 @@
         .hp-text { font-size: 10px; }
         .player-img { font-size: 64px; }
         .enemy-img { font-size: 64px; position: relative; }
-        .hiragana-label { font-size: 28px; position: absolute; top: -40px; left: 50%; transform: translateX(-50%); background: white; border: 2px solid #333; border-radius: 8px; padding: 4px 10px; }
+        .hiragana-label { font-size: 35px; font-family: Noto Sans JP; font-weight: 700; position: absolute; top: -40px; left: 50%; transform: translateX(-50%); background: white; border: 2px solid #333; border-radius: 8px; padding: 4px 10px; }
 
         /* INPUT AREA */
         .input-area { display: flex; flex-direction: column; align-items: center; padding: 16px; gap: 12px; }
@@ -416,17 +418,17 @@ function updatePlayerHP() {
     document.getElementById('player-hp-bar').style.width = playerHP + '%';
 }
 
-// Enemy attacks every 2 seconds
+// Enemy attacks every 5 seconds
 setInterval(() => {
     if (!gameActive) return;
-    playerHP -= 2;
+    playerHP -= 10;
     if (playerHP < 0) playerHP = 0;
     updatePlayerHP();
     // document.getElementById('feedback').textContent = '💥 Enemy attacked!';
     // document.getElementById('feedback').style.color = '#c00';
     setTimeout(() => document.getElementById('feedback').textContent = '', 800);
     if (playerHP <= 0) endGame(false);
-}, 1000);
+}, 5000);
 
 function endGame(win) {
     gameActive = false;
