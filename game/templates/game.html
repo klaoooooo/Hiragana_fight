@@ -200,24 +200,111 @@
 <script>
 const level = {{ level }};
 
+
+// Hiragana Data
+const row_a  = [{h:'あ', r:'a'},  {h:'い', r:'i'},   {h:'う', r:'u'},   {h:'え', r:'e'},  {h:'お', r:'o'}];
+const row_ka = [{h:'か', r:'ka'}, {h:'き', r:'ki'},  {h:'く', r:'ku'},  {h:'け', r:'ke'}, {h:'こ', r:'ko'}];
+const row_sa = [{h:'さ', r:'sa'}, {h:'し', r:'shi'}, {h:'す', r:'su'},  {h:'せ', r:'se'}, {h:'そ', r:'so'}];
+const row_ta = [{h:'た', r:'ta'}, {h:'ち', r:'chi'}, {h:'つ', r:'tsu'}, {h:'て', r:'te'}, {h:'と', r:'to'}];
+const row_na = [{h:'な', r:'na'}, {h:'に', r:'ni'},  {h:'ぬ', r:'nu'},  {h:'ね', r:'ne'}, {h:'の', r:'no'}];
+const row_ha = [{h:'は', r:'ha'}, {h:'ひ', r:'hi'},  {h:'ふ', r:'fu'},  {h:'へ', r:'he'}, {h:'ほ', r:'ho'}];
+const row_ma = [{h:'ま', r:'ma'}, {h:'み', r:'mi'},  {h:'む', r:'mu'},  {h:'め', r:'me'}, {h:'も', r:'mo'}];
+const row_ya = [{h:'や', r:'ya'},                    {h:'ゆ', r:'yu'},                    {h:'よ', r:'yo'}];
+const row_ra = [{h:'ら', r:'ra'}, {h:'り', r:'ri'},  {h:'る', r:'ru'},  {h:'れ', r:'re'}, {h:'ろ', r:'ro'}];
+const row_wa = [{h:'わ', r:'wa'},                    {h:'を', r:'wo'},                    {h:'ん', r:'n'}];
+
+const row_ga = [{h:'が', r:'ga'}, {h:'ぎ', r:'gi'},  {h:'ぐ', r:'gu'},  {h:'げ', r:'ge'}, {h:'ご', r:'go'}];
+const row_za = [{h:'ざ', r:'za'}, {h:'じ', r:'ji'},  {h:'ず', r:'zu'},  {h:'ぜ', r:'ze'}, {h:'ぞ', r:'zo'}];
+const row_da = [{h:'だ', r:'da'},                                       {h:'で', r:'de'}, {h:'ど', r:'do'}];
+const row_ba = [{h:'ば', r:'ba'}, {h:'び', r:'bi'},  {h:'ぶ', r:'bu'},  {h:'べ', r:'be'}, {h:'ぼ', r:'bo'}];
+const row_pa = [{h:'ぱ', r:'pa'}, {h:'ぴ', r:'pi'},  {h:'ぷ', r:'pu'},  {h:'ぺ', r:'pe'}, {h:'ぽ', r:'po'}];
+
+const row_kya = [{h:'きゃ', r:'kya'}, {h:'きゅ', r:'kyu'}, {h:'きょ', r:'kyo'}];
+const row_sha = [{h:'しゃ', r:'sha'}, {h:'しゅ', r:'shu'}, {h:'しぇ', r:'she'}, {h:'しょ', r:'sho'}];
+const row_cha = [{h:'ちゃ', r:'cha'}, {h:'ちゅ', r:'chu'}, {h:'ちぇ', r:'che'}, {h:'ちょ', r:'cho'}];
+const row_nya = [{h:'にゃ', r:'nya'}, {h:'にゅ', r:'nyu'}, {h:'にょ', r:'nyo'}];
+const row_hya = [{h:'ひゃ', r:'hya'}, {h:'ひゅ', r:'hyu'}, {h:'ひょ', r:'hyo'}];
+const row_mya = [{h:'みゃ', r:'mya'}, {h:'みゅ', r:'myu'}, {h:'みょ', r:'myo'}];
+const row_rya = [{h:'りゃ', r:'rya'}, {h:'りゅ', r:'ryu'}, {h:'りょ', r:'ryo'}];
+
+const row_gya = [{h:'ぎゃ', r:'gya'}, {h:'ぎゅ', r:'gyu'}, {h:'ぎょ', r:'gyo'}];
+const row_ja  = [{h:'じゃ', r:'ja'},  {h:'じゅ', r:'ju'},  {h:'じぇ', r:'je'},  {h:'じょ', r:'jo'}];
+const row_bya = [{h:'びゃ', r:'bya'}, {h:'びゅ', r:'byu'}, {h:'びょ', r:'byo'}];
+const row_pya = [{h:'ぴゃ', r:'pya'}, {h:'ぴゅ', r:'pyu'}, {h:'ぴょ', r:'pyo'}];
 // Hiragana data by level
 const hiraganaData = {
     1: [
-        {h:'あ',r:'a'},{h:'い',r:'i'},{h:'う',r:'u'},{h:'え',r:'e'},{h:'お',r:'o'},
-        {h:'か',r:'ka'},{h:'き',r:'ki'},{h:'く',r:'ku'},{h:'け',r:'ke'},{h:'こ',r:'ko'},
-        {h:'さ',r:'sa'},{h:'し',r:'shi'},{h:'す',r:'su'},{h:'せ',r:'se'},{h:'そ',r:'so'},
+        ...row_a,
     ],
     2: [
-        {h:'た',r:'ta'},{h:'ち',r:'chi'},{h:'つ',r:'tsu'},{h:'て',r:'te'},{h:'と',r:'to'},
-        {h:'な',r:'na'},{h:'に',r:'ni'},{h:'ぬ',r:'nu'},{h:'ね',r:'ne'},{h:'の',r:'no'},
-        {h:'は',r:'ha'},{h:'ひ',r:'hi'},{h:'ふ',r:'fu'},{h:'へ',r:'he'},{h:'ほ',r:'ho'},
+        ...row_ka,
+        ...row_sa,
+        ...row_ta,
     ],
     3: [
-        {h:'ま',r:'ma'},{h:'み',r:'mi'},{h:'む',r:'mu'},{h:'め',r:'me'},{h:'も',r:'mo'},
-        {h:'や',r:'ya'},{h:'ゆ',r:'yu'},{h:'よ',r:'yo'},
-        {h:'ら',r:'ra'},{h:'り',r:'ri'},{h:'る',r:'ru'},{h:'れ',r:'re'},{h:'ろ',r:'ro'},
-        {h:'わ',r:'wa'},{h:'を',r:'wo'},{h:'ん',r:'n'},
-    ]
+        ...row_na,
+        ...row_ha,
+        ...row_ma,
+    ],
+    4: [
+        ...row_ya,
+        ...row_ra,
+        ...row_wa,
+    ],
+    5: [
+        ...row_ga,
+        ...row_za,
+        ...row_da,
+        ...row_ba,
+        ...row_pa,
+    ],
+    6: [
+        ...row_kya,
+        ...row_sha,
+        ...row_cha,
+        ...row_nya,
+        ...row_hya,
+        ...row_mya,
+        ...row_rya,
+    ],
+    10: [
+        ...row_a,
+        ...row_ka,
+        ...row_sa,
+        ...row_ta,
+        ...row_na,
+        ...row_ha,
+        ...row_ma,
+        ...row_ya,
+        ...row_ra,
+        ...row_wa,
+    ],
+    11: [
+        ...row_a,
+        ...row_ka,
+        ...row_sa,
+        ...row_ta,
+        ...row_na,
+        ...row_ha,
+        ...row_ma,
+        ...row_ya,
+        ...row_ra,
+        ...row_wa,
+
+        ...row_ga,
+        ...row_za,
+        ...row_da,
+        ...row_ba,
+        ...row_pa,
+
+        ...row_kya,
+        ...row_sha,
+        ...row_cha,
+        ...row_nya,
+        ...row_hya,
+        ...row_mya,
+        ...row_rya,
+    ],
 };
 
 const data = hiraganaData[level] || hiraganaData[1];
@@ -228,17 +315,26 @@ let enemyHP = 10;
 let timeLeft = 60;
 let gameActive = true;
 
-// Shuffle
+// Fisher-Yates (Knuth) Shuffle algorithm
 function shuffle(arr) {
-    return [...arr].sort(() => Math.random() - 0.5);
+    const copy = [...arr];
+    for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
 }
+
 let queue = shuffle(data);
 
 function loadNext() {
-    if (queue.length === 0) queue = shuffle(data);
-    const current = queue[currentIndex % queue.length];
+    // If deck runs out, reshuffle a fresh copy
+    if (queue.length === 0) {
+        queue = shuffle(data);
+    }
+    // Pull the next card off the deck
+    const current = queue.pop();
     document.getElementById('hiragana-display').textContent = current.h;
-    currentIndex++;
     return current;
 }
 
@@ -273,6 +369,10 @@ input.addEventListener('input', () => {
         if (enemyHP <= 0) {
             enemyHP = 10;
             updateEnemyHP();
+
+            const healAmount = 35; // Change this value to adjust the heal size
+            playerHP = Math.min(100, playerHP + healAmount);
+            updatePlayerHP();
         }
         current = loadNext();
     }
@@ -293,14 +393,14 @@ function updatePlayerHP() {
 // Enemy attacks every 5 seconds
 setInterval(() => {
     if (!gameActive) return;
-    playerHP -= 10;
+    playerHP -= 2;
     if (playerHP < 0) playerHP = 0;
     updatePlayerHP();
-    document.getElementById('feedback').textContent = '💥 Enemy attacked!';
-    document.getElementById('feedback').style.color = '#c00';
+    // document.getElementById('feedback').textContent = '💥 Enemy attacked!';
+    // #document.getElementById('feedback').style.color = '#c00';
     setTimeout(() => document.getElementById('feedback').textContent = '', 800);
     if (playerHP <= 0) endGame(false);
-}, 5000);
+}, 1000);
 
 function endGame(win) {
     gameActive = false;
