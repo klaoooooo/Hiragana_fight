@@ -228,9 +228,10 @@ const row_mya = [{h:'みゃ', r:'mya'}, {h:'みゅ', r:'myu'}, {h:'みょ', r:'m
 const row_rya = [{h:'りゃ', r:'rya'}, {h:'りゅ', r:'ryu'}, {h:'りょ', r:'ryo'}];
 
 const row_gya = [{h:'ぎゃ', r:'gya'}, {h:'ぎゅ', r:'gyu'}, {h:'ぎょ', r:'gyo'}];
-const row_ja  = [{h:'じゃ', r:'ja'},  {h:'じゅ', r:'ju'},  {h:'じぇ', r:'je'},  {h:'じょ', r:'jo'}];
+const row_jya  = [{h:'じゃ', r:'ja'},  {h:'じゅ', r:'ju'},  {h:'じぇ', r:'je'},  {h:'じょ', r:'jo'}];
 const row_bya = [{h:'びゃ', r:'bya'}, {h:'びゅ', r:'byu'}, {h:'びょ', r:'byo'}];
 const row_pya = [{h:'ぴゃ', r:'pya'}, {h:'ぴゅ', r:'pyu'}, {h:'ぴょ', r:'pyo'}];
+
 // Hiragana data by level
 const hiraganaData = {
     1: [
@@ -266,6 +267,11 @@ const hiraganaData = {
         ...row_hya,
         ...row_mya,
         ...row_rya,
+
+        ...row_gya,
+        ...row_jya,
+        ...row_bya,
+        ...row_pya,
     ],
     10: [
         ...row_a,
@@ -304,6 +310,11 @@ const hiraganaData = {
         ...row_hya,
         ...row_mya,
         ...row_rya,
+
+        ...row_gya,
+        ...row_jya,
+        ...row_bya,
+        ...row_pya,
     ],
 };
 
@@ -366,7 +377,11 @@ input.focus();
 input.addEventListener('input', () => {
     if (!gameActive) return;
     const val = input.value.trim().toLowerCase();
-    if (val === current.r) {
+    // Check if val matches: supports either an array of answers or a single string
+    const isCorrect = Array.isArray(current.r) 
+        ? current.r.includes(val) 
+        : val === current.r;
+    if (isCorrect) {
         // Correct!
         score += scorePerCorrect[level] || 50; 
         document.getElementById('score').textContent = String(score).padStart(9, '0');
@@ -401,7 +416,7 @@ function updatePlayerHP() {
     document.getElementById('player-hp-bar').style.width = playerHP + '%';
 }
 
-// Enemy attacks every 5 seconds
+// Enemy attacks every 2 seconds
 setInterval(() => {
     if (!gameActive) return;
     playerHP -= 2;
