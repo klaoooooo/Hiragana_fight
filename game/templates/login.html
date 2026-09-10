@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hiragana Fight</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background: #b0b0b0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-image: url('https://i.imgur.com/vines.png');
+            background-repeat: repeat-x;
+            background-position: top;
+        }
+        .title { font-size: 48px; color: #333; text-shadow: 4px 4px 0 #000; margin-bottom: 40px; text-align: center; line-height: 1.4; }
+        .form-box { background: rgba(255,255,255,0.15); border: 3px solid #333; border-radius: 16px; padding: 32px; width: 360px; }
+        input { width: 100%; padding: 12px; margin: 8px 0 16px; font-family: 'Press Start 2P', cursive; font-size: 12px; border: 2px solid #333; border-radius: 8px; background: #eee; }
+        label { font-size: 10px; color: #333; }
+        .btn { width: 100%; padding: 14px; font-family: 'Press Start 2P', cursive; font-size: 14px; background: #eee; border: 3px solid #333; border-radius: 12px; cursor: pointer; margin-top: 8px; }
+        .btn:hover { background: #ddd; }
+        .error { color: red; font-size: 10px; margin-bottom: 12px; }
+        .link { text-align: center; margin-top: 16px; font-size: 10px; }
+        .link a { color: #333; }
+    </style>
+</head>
+<body>
+    <div class="title">HiRAGANA<br>FiGHT</div>
+    <div class="form-box">
+        {% if error %}<div class="error">{{ error }}</div>{% endif %}
+        <form method="POST">
+            {% csrf_token %}
+            <label>USERNAME</label>
+            <input type="text" name="username" required>
+            <label>PASSWORD</label>
+            <input type="password" name="password" required>
+            <button class="btn" type="submit">LOG IN</button>
+        </form>
+        <div class="link">
+            <a href="{% url 'register' %}">Don't have an account? REGISTER</a>
+        </div>
+    </div>
+</body>
+</html>

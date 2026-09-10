@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Level</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Press Start 2P', cursive; background: #b0b0b0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        h1 { font-size: 28px; color: #333; margin-bottom: 40px; text-shadow: 3px 3px 0 #000; }
+        .levels { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+        .level-card { background: #eee; border: 3px solid #333; border-radius: 12px; padding: 24px; width: 200px; text-align: center; cursor: pointer; text-decoration: none; color: #333; }
+        .level-card:hover { background: #ddd; transform: scale(1.05); }
+        .level-card h2 { font-size: 18px; margin-bottom: 12px; }
+        .level-card p { font-size: 9px; color: #666; line-height: 1.8; }
+        .back { margin-top: 32px; font-size: 10px; }
+        .back a { color: #333; }
+    </style>
+</head>
+<body>
+    <h1>SELECT STAGE</h1>
+    <div class="levels">
+        <a class="level-card" href="{% url 'game' level=1 %}">
+            <h2>STAGE 1</h2>
+            <p>あ か さ た な<br>Vowels & Basic</p>
+        </a>
+        <a class="level-card" href="{% url 'game' level=2 %}">
+            <h2>STAGE 2</h2>
+            <p>は ま や ら わ<br>Intermediate</p>
+        </a>
+        <a class="level-card" href="{% url 'game' level=3 %}">
+            <h2>STAGE 3</h2>
+            <p>All Hiragana<br>Full Challenge</p>
+        </a>
+    </div>
+    <div class="back"><a href="{% url 'home' %}">← BACK</a></div>
+</body>
+</html>

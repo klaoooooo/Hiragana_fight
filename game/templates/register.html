@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register - Hiragana Fight</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Press Start 2P', cursive; background: #b0b0b0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .title { font-size: 32px; color: #333; text-shadow: 4px 4px 0 #000; margin-bottom: 32px; text-align: center; }
+        .form-box { background: rgba(255,255,255,0.15); border: 3px solid #333; border-radius: 16px; padding: 32px; width: 380px; }
+        input { width: 100%; padding: 12px; margin: 8px 0 8px; font-family: 'Press Start 2P', cursive; font-size: 12px; border: 2px solid #333; border-radius: 8px; background: #eee; }
+        label { font-size: 10px; color: #333; }
+        .btn { width: 100%; padding: 14px; font-family: 'Press Start 2P', cursive; font-size: 14px; background: #eee; border: 3px solid #333; border-radius: 12px; cursor: pointer; margin-top: 8px; }
+        .btn:hover { background: #ddd; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .error { color: red; font-size: 9px; margin-bottom: 12px; }
+        .link { text-align: center; margin-top: 16px; font-size: 10px; }
+        .link a { color: #333; }
+
+        /* Password requirements */
+        .requirements { margin: 4px 0 12px; }
+        .req { font-size: 8px; padding: 3px 0; display: flex; align-items: center; gap: 6px; }
+        .req.ok { color: green; }
+        .req.fail { color: #999; }
+        .req span { font-size: 10px; }
+    </style>
+</head>
+<body>
+    <div class="title">REGISTER</div>
+    <div class="form-box">
+        {% if error %}<div class="error">{{ error }}</div>{% endif %}
+        <form method="POST" id="reg-form">
+            {% csrf_token %}
+            <label>USERNAME</label>
+            <input type="text" name="username" required>
+
+            <label>PASSWORD</label>
+            <input type="password" name="password" id="password" required oninput="checkPassword()">
+
+            <div class="requirements">
+                <div class="req fail" id="req-len"><span>●</span> At least 8 characters</div>
+                <div class="req fail" id="req-upper"><span>●</span> At least 1 uppercase letter (A-Z)</div>
+                <div class="req fail" id="req-lower"><span>●</span> At least 1 lowercase letter (a-z)</div>
+            </div>
+
+            <label>CONFIRM PASSWORD</label>
+            <input type="password" name="confirm" id="confirm" required oninput="checkMatch()">
+            <div class="req fail" id="req-match" style="font-size:8px;margin-bottom:8px">
+                <span>●</span> Passwords must match
+            </div>
+
+            <button class="btn" type="submit" id="submit-btn" disabled>REGISTER</button>
+        </form>
+        <div class="link">
+            <a href="{% url 'login' %}">Already have an account? LOG IN</a>
+        </div>
+    </div>
+
+    <script>
+        function checkPassword() {
+            const pw = document.getElementById('password').value;
+            const lenOk = pw.length >= 8;
+            const upperOk = /[A-Z]/.test(pw);
+            const lowerOk = /[a-z]/.test(pw);
+
+            setReq('req-len', lenOk);
+            setReq('req-upper', upperOk);
+            setReq('req-lower', lowerOk);
+            checkMatch();
+            updateBtn(lenOk && upperOk && lowerOk);
+        }
+
+        function checkMatch() {
+            const pw = document.getElementById('password').value;
+            const cf = document.getElementById('confirm').value;
+            const matchOk = pw === cf && cf.length > 0;
+            setReq('req-match', matchOk);
+            const lenOk = pw.length >= 8;
+            const upperOk = /[A-Z]/.test(pw);
+            const lowerOk = /[a-z]/.test(pw);
+            updateBtn(lenOk && upperOk && lowerOk && matchOk);
+        }
+
+        function setReq(id, ok) {
+            const el = document.getElementById(id);
+            el.classList.toggle('ok', ok);
+            el.classList.toggle('fail', !ok);
+        }
+
+        function updateBtn(allOk) {
+            document.getElementById('submit-btn').disabled = !allOk;
+        }
+    </script>
+</body>
+</html>

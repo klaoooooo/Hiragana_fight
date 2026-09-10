@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hiragana Fight - Stage {{ level }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Press Start 2P', cursive; background: #b0b0b0; overflow: hidden; }
+
+        /* TOP BAR */
+        .topbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; background: #999; border-bottom: 3px solid #333; }
+        .stage-title { font-size: 14px; }
+        .score { font-size: 12px; }
+
+        /* BATTLE AREA */
+        .battle { display: flex; justify-content: space-around; align-items: center; padding: 24px; height: 340px; background: #c0c0c0; border-bottom: 3px solid #333; }
+
+        /* PLAYER */
+        .player-side, .enemy-side { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .status-box { background: rgba(0,0,0,0.1); border: 2px solid #333; border-radius: 8px; padding: 12px; font-size: 8px; line-height: 2; width: 160px; }
+        .hp-bar-container { width: 120px; height: 16px; background: #f44; border: 2px solid #333; border-radius: 4px; overflow: hidden; }
+        .hp-bar { height: 100%; background: #4c4; transition: width 0.3s; }
+        .hp-text { font-size: 10px; }
+        .player-img { font-size: 64px; }
+        .enemy-img { font-size: 64px; position: relative; }
+        .hiragana-label { font-size: 28px; position: absolute; top: -40px; left: 50%; transform: translateX(-50%); background: white; border: 2px solid #333; border-radius: 8px; padding: 4px 10px; }
+
+        /* INPUT AREA */
+        .input-area { display: flex; flex-direction: column; align-items: center; padding: 16px; gap: 12px; }
+        .type-input { font-family: 'Press Start 2P', cursive; font-size: 18px; padding: 12px 24px; border: 3px solid #333; border-radius: 12px; background: #eee; width: 320px; text-align: center; outline: none; }
+        .feedback { font-size: 12px; color: #c00; height: 20px; }
+
+        /* HIRAGANA TABLE */
+        .table-area {
+            padding: 12px 24px;
+            overflow-x: auto;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        table {
+            border-collapse: collapse;
+            margin: auto;
+            width: 100%;
+        }
+        td {
+            border: 1px solid #999;
+            padding: 8px 12px;
+            text-align: center;
+            min-width: 56px;
+        }
+        .hira { font-size: 20px; display: block; }
+        .roma { font-size: 9px; color: #333; font-weight: bold; }
+
+        /* GAME OVER */
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; flex-direction: column; gap: 20px; }
+        .overlay.show { display: flex; }
+        .overlay h2 { font-size: 32px; color: white; }
+        .overlay p { font-size: 14px; color: #eee; }
+        .overlay .btn { padding: 14px 32px; font-family: 'Press Start 2P', cursive; font-size: 14px; background: #eee; border: 3px solid #333; border-radius: 12px; cursor: pointer; text-decoration: none; color: #333; }
+    </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+    <span class="stage-title">STAGE {{ level }}</span>
+    <span class="score">SCORE: <span id="score">000000000</span></span>
+</div>
+
+<!-- BATTLE AREA -->
+<div class="battle">
+    <!-- Player -->
+    <div class="player-side">
+        <div class="status-box">
+            Status<br>
+            HP: <span id="player-hp">100</span>/100<br>
+            ATK: 1x per correct<br>
+        </div>
+        <div class="player-img">🧑</div>
+        <div class="hp-bar-container">
+            <div class="hp-bar" id="player-hp-bar" style="width:100%"></div>
+        </div>
+        <div class="hp-text"><span id="player-hp-text">100</span>/100</div>
+    </div>
+
+    <!-- Timer -->
+    <div style="text-align:center">
+        <div style="font-size:12px;margin-bottom:8px">TIME</div>
+        <div style="font-size:32px" id="timer">60</div>
+    </div>
+
+    <!-- Enemy -->
+    <div class="enemy-side">
+        <div class="status-box">
+            Status<br>
+            HP: <span id="enemy-hp-text">10</span>/10<br>
+            ATK: 20<br>
+        </div>
+        <div class="enemy-img">
+            <div class="hiragana-label" id="hiragana-display">あ</div>
+            👾
+        </div>
+        <div class="hp-bar-container">
+            <div class="hp-bar" id="enemy-hp-bar" style="width:100%;background:#44f"></div>
+        </div>
+        <div class="hp-text"><span id="enemy-hp">10</span>/10</div>
+    </div>
+</div>
+
+<!-- INPUT -->
+<div class="input-area">
+    <input type="text" id="type-input" class="type-input" placeholder="Type romaji here..." autocomplete="off">
+    <div class="feedback" id="feedback"></div>
+</div>
+
+<!-- HIRAGANA REFERENCE TABLE -->
+<div class="table-area">
+<table>
+    <tr>
+        <td><span class="hira">あ</span><span class="roma">a</span></td>
+        <td><span class="hira">い</span><span class="roma">i</span></td>
+        <td><span class="hira">う</span><span class="roma">u</span></td>
+        <td><span class="hira">え</span><span class="roma">e</span></td>
+        <td><span class="hira">お</span><span class="roma">o</span></td>
+    </tr>
+    <tr>
+        <td><span class="hira">か</span><span class="roma">ka</span></td>
+        <td><span class="hira">き</span><span class="roma">ki</span></td>
+        <td><span class="hira">く</span><span class="roma">ku</span></td>
+        <td><span class="hira">け</span><span class="roma">ke</span></td>
+        <td><span class="hira">こ</span><span class="roma">ko</span></td>
+    </tr>
+    <tr>
+        <td><span class="hira">さ</span><span class="roma">sa</span></td>
+        <td><span class="hira">し</span><span class="roma">shi</span></td>
+        <td><span class="hira">す</span><span class="roma">su</span></td>
+        <td><span class="hira">せ</span><span class="roma">se</span></td>
+        <td><span class="hira">そ</span><span class="roma">so</span></td>
+    </tr>
+    <tr>
+        <td><span class="hira">た</span><span class="roma">ta</span></td>
+        <td><span class="hira">ち</span><span class="roma">chi</span></td>
+        <td><span class="hira">つ</span><span class="roma">tsu</span></td>
+        <td><span class="hira">て</span><span class="roma">te</span></td>
+        <td><span class="hira">と</span><span class="roma">to</span></td>
+    </tr>
+    <tr>
+        <td><span class="hira">な</span><span class="roma">na</span></td>
+        <td><span class="hira">に</span><span class="roma">ni</span></td>
+        <td><span class="hira">ぬ</span><span class="roma">nu</span></td>
+        <td><span class="hira">ね</span><span class="roma">ne</span></td>
+        <td><span class="hira">の</span><span class="roma">no</span></td>
+    </tr>
+    <tr>
+        <td><span class="hira">は</span><span class="roma">ha</span></td>
+        <td><span class="hira">ひ</span><span class="roma">hi</span></td>
+        <td><span class="hira">ふ</span><span class="roma">fu</span></td>
+        <td><span class="hira">へ</span><span class="roma">he</span></td>
+        <td><span class="hira">ほ</span><span class="roma">ho</span></td>
+    </tr>
+    <tr>
+        <td><span class="hira">ま</span><span class="roma">ma</span></td>
+        <td><span class="hira">み</span><span class="roma">mi</span></td>
+        <td><span class="hira">む</span><span class="roma">mu</span></td>
+        <td><span class="hira">め</span><span class="roma">me</span></td>
+        <td><span class="hira">も</span><span class="roma">mo</span></td>
+    </tr>
+    <tr>
+        <td><span class="hira">や</span><span class="roma">ya</span></td>
+        <td></td>
+        <td><span class="hira">ゆ</span><span class="roma">yu</span></td>
+        <td></td>
+        <td><span class="hira">よ</span><span class="roma">yo</span></td>
+    </tr>
+    <tr>
+        <td><span class="hira">ら</span><span class="roma">ra</span></td>
+        <td><span class="hira">り</span><span class="roma">ri</span></td>
+        <td><span class="hira">る</span><span class="roma">ru</span></td>
+        <td><span class="hira">れ</span><span class="roma">re</span></td>
+        <td><span class="hira">ろ</span><span class="roma">ro</span></td>
+    </tr>
+    <tr>
+        <td><span class="hira">わ</span><span class="roma">wa</span></td>
+        <td></td>
+        <td><span class="hira">を</span><span class="roma">wo</span></td>
+        <td></td>
+        <td><span class="hira">ん</span><span class="roma">n</span></td>
+    </tr>
+</table>
+</div>
+
+<!-- GAME OVER OVERLAY -->
+<div class="overlay" id="overlay">
+    <h2 id="overlay-title">GAME OVER</h2>
+    <p id="overlay-msg">Score: 0</p>
+    <a class="btn" href="{% url 'level_select' %}">PLAY AGAIN</a>
+    <a class="btn" href="{% url 'home' %}">HOME</a>
+</div>
+
+<script>
+const level = {{ level }};
+
+// Hiragana data by level
+const hiraganaData = {
+    1: [
+        {h:'あ',r:'a'},{h:'い',r:'i'},{h:'う',r:'u'},{h:'え',r:'e'},{h:'お',r:'o'},
+        {h:'か',r:'ka'},{h:'き',r:'ki'},{h:'く',r:'ku'},{h:'け',r:'ke'},{h:'こ',r:'ko'},
+        {h:'さ',r:'sa'},{h:'し',r:'shi'},{h:'す',r:'su'},{h:'せ',r:'se'},{h:'そ',r:'so'},
+    ],
+    2: [
+        {h:'た',r:'ta'},{h:'ち',r:'chi'},{h:'つ',r:'tsu'},{h:'て',r:'te'},{h:'と',r:'to'},
+        {h:'な',r:'na'},{h:'に',r:'ni'},{h:'ぬ',r:'nu'},{h:'ね',r:'ne'},{h:'の',r:'no'},
+        {h:'は',r:'ha'},{h:'ひ',r:'hi'},{h:'ふ',r:'fu'},{h:'へ',r:'he'},{h:'ほ',r:'ho'},
+    ],
+    3: [
+        {h:'ま',r:'ma'},{h:'み',r:'mi'},{h:'む',r:'mu'},{h:'め',r:'me'},{h:'も',r:'mo'},
+        {h:'や',r:'ya'},{h:'ゆ',r:'yu'},{h:'よ',r:'yo'},
+        {h:'ら',r:'ra'},{h:'り',r:'ri'},{h:'る',r:'ru'},{h:'れ',r:'re'},{h:'ろ',r:'ro'},
+        {h:'わ',r:'wa'},{h:'を',r:'wo'},{h:'ん',r:'n'},
+    ]
+};
+
+const data = hiraganaData[level] || hiraganaData[1];
+let currentIndex = 0;
+let score = 0;
+let playerHP = 100;
+let enemyHP = 10;
+let timeLeft = 60;
+let gameActive = true;
+
+// Shuffle
+function shuffle(arr) {
+    return [...arr].sort(() => Math.random() - 0.5);
+}
+let queue = shuffle(data);
+
+function loadNext() {
+    if (queue.length === 0) queue = shuffle(data);
+    const current = queue[currentIndex % queue.length];
+    document.getElementById('hiragana-display').textContent = current.h;
+    currentIndex++;
+    return current;
+}
+
+let current = loadNext();
+
+// Timer
+const timerEl = document.getElementById('timer');
+const interval = setInterval(() => {
+    if (!gameActive) return;
+    timeLeft--;
+    timerEl.textContent = timeLeft;
+    if (timeLeft <= 0) endGame(false);
+}, 1000);
+
+// Input
+const input = document.getElementById('type-input');
+input.focus();
+input.addEventListener('input', () => {
+    if (!gameActive) return;
+    const val = input.value.trim().toLowerCase();
+    if (val === current.r) {
+        // Correct!
+        score += 100;
+        document.getElementById('score').textContent = String(score).padStart(9, '0');
+        enemyHP--;
+        updateEnemyHP();
+        input.value = '';
+        document.getElementById('feedback').textContent = '✓ Correct!';
+        document.getElementById('feedback').style.color = '#080';
+        setTimeout(() => document.getElementById('feedback').textContent = '', 800);
+
+        if (enemyHP <= 0) {
+            enemyHP = 10;
+            updateEnemyHP();
+        }
+        current = loadNext();
+    }
+});
+
+function updateEnemyHP() {
+    document.getElementById('enemy-hp').textContent = enemyHP;
+    document.getElementById('enemy-hp-text').textContent = enemyHP;
+    document.getElementById('enemy-hp-bar').style.width = (enemyHP * 10) + '%';
+}
+
+function updatePlayerHP() {
+    document.getElementById('player-hp').textContent = playerHP;
+    document.getElementById('player-hp-text').textContent = playerHP;
+    document.getElementById('player-hp-bar').style.width = playerHP + '%';
+}
+
+// Enemy attacks every 5 seconds
+setInterval(() => {
+    if (!gameActive) return;
+    playerHP -= 10;
+    if (playerHP < 0) playerHP = 0;
+    updatePlayerHP();
+    document.getElementById('feedback').textContent = '💥 Enemy attacked!';
+    document.getElementById('feedback').style.color = '#c00';
+    setTimeout(() => document.getElementById('feedback').textContent = '', 800);
+    if (playerHP <= 0) endGame(false);
+}, 5000);
+
+function endGame(win) {
+    gameActive = false;
+    clearInterval(interval);
+    input.disabled = true;
+    const overlay = document.getElementById('overlay');
+    overlay.classList.add('show');
+    document.getElementById('overlay-title').textContent = win ? 'YOU WIN!' : 'GAME OVER';
+    document.getElementById('overlay-msg').textContent = 'Score: ' + score;
+
+    // Save score to database
+    fetch('/save-score/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ score: score, level: level })
+    });
+}
+</script>
+
+</body>
+</html>
