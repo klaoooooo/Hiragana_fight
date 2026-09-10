@@ -316,6 +316,9 @@ let timeLeft = 60;
 let gameActive = true;
 
 // Fisher-Yates (Knuth) Shuffle algorithm
+const scorePerCorrect = {1: 50, 2: 100, 3: 150};
+
+// Shuffle
 function shuffle(arr) {
     const copy = [...arr];
     for (let i = copy.length - 1; i > 0; i--) {
@@ -357,7 +360,7 @@ input.addEventListener('input', () => {
     const val = input.value.trim().toLowerCase();
     if (val === current.r) {
         // Correct!
-        score += 100;
+        score += scorePerCorrect[level] || 50; 
         document.getElementById('score').textContent = String(score).padStart(9, '0');
         enemyHP--;
         updateEnemyHP();
