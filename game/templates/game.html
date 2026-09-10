@@ -408,7 +408,7 @@ setInterval(() => {
     if (playerHP < 0) playerHP = 0;
     updatePlayerHP();
     // document.getElementById('feedback').textContent = '💥 Enemy attacked!';
-    // #document.getElementById('feedback').style.color = '#c00';
+    // document.getElementById('feedback').style.color = '#c00';
     setTimeout(() => document.getElementById('feedback').textContent = '', 800);
     if (playerHP <= 0) endGame(false);
 }, 1000);
