@@ -315,10 +315,9 @@ let enemyHP = 10;
 let timeLeft = 60;
 let gameActive = true;
 
-// Fisher-Yates (Knuth) Shuffle algorithm
 const scorePerCorrect = {1: 50, 2: 100, 3: 150};
 
-// Shuffle
+// Fisher-Yates (Knuth) Shuffle algorithm
 function shuffle(arr) {
     const copy = [...arr];
     for (let i = copy.length - 1; i > 0; i--) {
